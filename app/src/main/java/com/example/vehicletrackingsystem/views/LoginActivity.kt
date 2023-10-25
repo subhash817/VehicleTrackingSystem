@@ -58,7 +58,7 @@ class LoginActivity : AppCompatActivity() {
 
         var isAllFieldsChecked = false
         binding.loginButton.setOnClickListener {
-            viewModel.getLogin("8448843888", "123", "12345", "sdfgasd")
+            viewModel.getLogin("8448843888", "123", "lkjdf8sdfssdff", "jdsflkdsjlkf1")
 
             viewModel.mutableLoginResponse.observe(this, { response ->
                 when (response) {
