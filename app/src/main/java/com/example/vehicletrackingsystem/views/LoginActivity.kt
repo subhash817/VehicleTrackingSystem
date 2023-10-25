@@ -6,12 +6,14 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.eksource.events.utils.SharedPreferencesHelper
 import com.example.vehicletrackingsystem.R
 import com.example.vehicletrackingsystem.commonUtils.DateTimeUtil
 import com.example.vehicletrackingsystem.commonUtils.Logger
 import com.example.vehicletrackingsystem.commonUtils.NetworkConnection
 import com.example.vehicletrackingsystem.databinding.ActivityLoginBinding
 import com.example.vehicletrackingsystem.repository.UserRepository
+import com.example.vehicletrackingsystem.utils.Constants
 import com.example.vehicletrackingsystem.utils.LoginViewModelFactory
 import com.example.vehicletrackingsystem.utils.Resource
 import com.example.vehicletrackingsystem.viewmodels.LoginViewModel
@@ -29,7 +31,7 @@ class LoginActivity : AppCompatActivity() {
         setUpViews()
         val layoutInflater = findViewById<View>(R.id.networkError)
         val networkConnection = NetworkConnection(applicationContext)
-
+        SharedPreferencesHelper.instance?.putString(Constants.ID_TOKEN,"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")
         networkConnection.observe(this) { isConnected ->
             if (isConnected) {
                 FancyToast.makeText(
@@ -60,15 +62,25 @@ class LoginActivity : AppCompatActivity() {
         binding.loginButton.setOnClickListener {
             viewModel.getLogin("8448843888", "123", "lkjdf8sdfssdff", "jdsflkdsjlkf1")
 
-            viewModel.mutableLoginResponse.observe(this, { response ->
+            viewModel.mutableLoginResponse.observe(this) { response ->
                 when (response) {
                     is Resource.Success -> {
                         response.data?.let { loginResponse ->
                             if (loginResponse.data != null) {
+                                SharedPreferencesHelper.instance?.putString(Constants.ID_TOKEN,loginResponse.token)
+
                                 Log.d("Login_Url", loginResponse.data.toString())
-                                val toast = Toast.makeText(this, loginResponse.msg.toString(), Toast.LENGTH_LONG).show()
+                                val toast = Toast.makeText(
+                                    this,
+                                    loginResponse.msg.toString(),
+                                    Toast.LENGTH_LONG
+                                ).show()
                             } else {
-                                val toast = Toast.makeText(this, loginResponse.msg.toString(), Toast.LENGTH_LONG).show()
+                                val toast = Toast.makeText(
+                                    this,
+                                    loginResponse.msg.toString(),
+                                    Toast.LENGTH_LONG
+                                ).show()
                             }
 
                         }
@@ -76,7 +88,8 @@ class LoginActivity : AppCompatActivity() {
 
                     is Resource.Error -> {
                         response.msg?.let { message ->
-                            Log.d("Error", response.msg
+                            Log.d(
+                                "Error", response.msg
                             )
 
                             val toast = Toast.makeText(this, message, Toast.LENGTH_LONG).show()
@@ -88,7 +101,7 @@ class LoginActivity : AppCompatActivity() {
                     }
                 }
 
-            })
+            }
 
 //            isAllFieldsChecked = checkAllFields()
 //            if (isAllFieldsChecked) {

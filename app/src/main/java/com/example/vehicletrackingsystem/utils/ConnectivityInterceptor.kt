@@ -1,5 +1,6 @@
 package com.example.vehicletrackingsystem.utils
 
+import com.eksource.events.utils.SharedPreferencesHelper
 import okhttp3.*
 import okhttp3.internal.http2.ConnectionShutdownException
 import java.io.IOException
@@ -18,7 +19,9 @@ class ConnectivityInterceptor: Interceptor {
                     chain.request().newBuilder()
                         .header(
                             "Authorization",
-                            "Bearer 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"
+                            "Bearer " + SharedPreferencesHelper.instance?.getString(
+                                Constants.ID_TOKEN
+                            )!!
                         )
 
                         .build()
